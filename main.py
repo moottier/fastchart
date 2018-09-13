@@ -6,6 +6,7 @@ from typing import Container
 
 TEMPLATE_DIRECTORY = r'F:\LabData\Lab\ISO 17025\Control Chart\Templates\fastmake ccs'
 CHART_DIRECTORY = r'F:\LabData\Lab\ISO 17025\Control Chart\Templates\fastmake ccs\chart copies'
+TARGET_DIRECTORY = r'F:\LabData\Lab\ISO 17025\Control Chart\Templates\fastmake ccs\chart copies\output'
 
 class Chart:
     DEFAULT_INPUT_ADDRESSES = ('A2', 'B2', 'C2', 'D2',)
@@ -17,6 +18,9 @@ class Chart:
         self.name = name
         self.wb = None
         self.active_worksheet = None
+
+    def __str__(self):
+        NotImplemented
 
     def load_workbook(self):
         self.wb = openpyxl.load_workbook(self.file_path)
@@ -60,6 +64,7 @@ if name == '__main__':
     lcs_id = None
     continue_status = None
     for chart in chart_gatherer.gathered_charts:
+        chart.load_workbook()
         if continue_status.lower() != 'yy':
             continue_status = input(f'Modify {chart}? (Y/N/NN for no to all/YY for yes to all)')
 
@@ -78,7 +83,6 @@ if name == '__main__':
         chart.active_worksheet.title = lcs_id
 
 
-
         ets_result = input('What is the ETS value? (input nothing to re-use last input)'
                        '\n'
                        '--> ')
@@ -94,3 +98,5 @@ if name == '__main__':
 
             for i, val in enumerate(user_in, int=0):
                 chart.set_cell(Chart.DEFAULT_INPUT_ADDRESSES[i], val)
+
+        chart.wb.save(chart + '.xlsx', as_template=False)
