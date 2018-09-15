@@ -20,7 +20,7 @@ class Chart:
         self.active_worksheet = None
 
     def __str__(self):
-        NotImplemented
+        re.search(r'[\|/]+([\w]+).x[\w]{2,3}', self.file_path)[0]
 
     def load_workbook(self):
         self.wb = openpyxl.load_workbook(self.file_path)
@@ -43,7 +43,7 @@ class ChartGatherer:
 
     def gather_charts(self, extension='xlsx'):
         for dirpath, dirnames, filenames in os.walk(self.directory):
-            filenames = [chart_format(os.path.join(dirpath, file)) for file in filenames if file.endswith(extension)]
+            filenames = [self.chart_format(os.path.join(dirpath, file)) for file in filenames if file.endswith(extension)]
             self.gathered_charts.extend(filenames)
 
 class Template:
@@ -51,7 +51,7 @@ class Template:
         self.type = type
 
 
-if name == '__main__':
+if __name__ == '__main__':
     chart_source = input('What is the Chart source? (input directory or file or blank for default chart directory)'
                          '\n'
                          '--> ')
